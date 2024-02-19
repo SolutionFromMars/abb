@@ -1,4 +1,4 @@
-# Последняя проверка работы была в феврале 2024 года с aiogram 3.3 на python 3.11
+# Последняя проверка работы была в феврале 2024 года с aiogram 3.4.1 на python 3.11
 import os
 if os.path.isfile('config.py'):
     from config import TOKEN
