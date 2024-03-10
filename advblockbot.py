@@ -27,14 +27,9 @@ def Restart():
         f.write(chr(0b01))
     os._exit(1)
 
-def checkgroup(func):
-    pass
-
 keyboard.add_hotkey('R+1+Home', Restart)
 
 try:
-
-
     if os.path.isfile('life.dat'):
         with open('life.dat', 'r') as f:
             if f.read() == chr(0b01): print('Успешный перезапуск')
@@ -44,23 +39,30 @@ try:
     with open('life.dat', 'w') as f:
         f.write(chr(0b00))
 
+    def checkgroup(func): # Декоратор для сокращения кода основных командных асихронных функций
+        async def wrapper(m: types.Message):
+            if m.chat.type == 'group' or m.chat.type == 'supergroup':
+                await func(m)
+            else: await m.answer('Бот работает только в группах')
+        return wrapper
+
     @dp.message(Command('start'))
+    @checkgroup
     async def NewChat(m: types.Message):
-        if m.chat.type == 'group' or m.chat.type == 'supergroup':
-            await m.answer('Я \- бот, который поможет избавляться от рекламы других ботов\. Поддержать можно по команде [/donate](/donate@advblockbot)', parse_mode=ParseMode.MARKDOWN_V2);
-        else: await m.answer('Бот работает только в группах')
+        await m.answer('Я \- бот, который поможет избавляться от рекламы других ботов\. Поддержать можно по команде [/donate](/donate@advblockbot)', parse_mode=ParseMode.MARKDOWN_V2)
 
     @dp.message(Command('off'))
+    @checkgroup
     async def Off(m: types.Message):
-        if m.chat.type == 'group' or m.chat.type == 'supergroup':
-            await m.answer('Блокировка рекламы выключена');
-        else: await m.answer('Бот работает только в группах')
+        await m.answer('Блокировка рекламы выключена')
 
     @dp.message(Command('on'))
+    @checkgroup
     async def On(m: types.Message):
-        pass
+        await m.answer('Блокировка рекламы включена')
 
     @dp.message(Command('donate'))
+    @checkgroup
     async def Donate(m: types.Message):
         pass
 
